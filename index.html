@@ -1,0 +1,127 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>scoreboard ✨</title>
+<meta name="theme-color" content="#ffd9e8">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css">
+
+<div class="blobs" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<!-- ── setup nag (only if config.js is untouched) ───────────── -->
+<section id="screen-setup" class="screen center" hidden>
+  <div class="card pad-lg narrow">
+    <div class="logo big">🏆</div>
+    <h1 class="display">almost there</h1>
+    <p class="muted">Open <code>config.js</code> and paste your Supabase <b>Project URL</b> and <b>anon key</b>, then run <code>supabase/schema.sql</code> in the SQL editor.</p>
+    <p class="muted tiny">Supabase dashboard → Project Settings → API</p>
+  </div>
+</section>
+
+<!-- ── login / join ─────────────────────────────────────────── -->
+<section id="screen-auth" class="screen center" hidden>
+  <div class="card pad-lg narrow auth-card">
+    <div class="logo big">🏆</div>
+    <h1 class="display">scoreboard</h1>
+    <p class="muted">keeping score, lovingly</p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab is-on" data-tab="login" role="tab">log in</button>
+      <button class="tab" data-tab="join" role="tab">join</button>
+    </div>
+
+    <form id="form-auth" autocomplete="on">
+      <label class="field">
+        <span>your name</span>
+        <input id="in-name" name="username" type="text" maxlength="24" required placeholder="e.g. Maya" autocomplete="username">
+      </label>
+      <label class="field">
+        <span>password</span>
+        <input id="in-pass" name="password" type="password" minlength="4" required placeholder="••••••" autocomplete="current-password">
+      </label>
+
+      <div id="join-only" hidden>
+        <div class="field">
+          <span>pick your emoji</span>
+          <div id="emoji-pick" class="pick-grid"></div>
+        </div>
+        <div class="field">
+          <span>pick your colour</span>
+          <div id="color-pick" class="pick-row"></div>
+        </div>
+      </div>
+
+      <button id="btn-auth" class="btn btn-pink btn-block" type="submit">let me in ✨</button>
+    </form>
+  </div>
+</section>
+
+<!-- ── the board ────────────────────────────────────────────── -->
+<main id="screen-app" class="screen" hidden>
+  <header class="topbar">
+    <div class="brand"><span class="logo">🏆</span><span class="display">scoreboard</span></div>
+    <div class="who">
+      <button id="chip-me" class="chip" title="change your emoji / colour"></button>
+      <button id="btn-out" class="btn btn-ghost tiny">log out</button>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <section id="podium" class="podium"></section>
+
+    <div class="grid">
+      <section class="card pad">
+        <h2 class="section-title">🏅 standings</h2>
+        <div id="board" class="board"></div>
+      </section>
+
+      <section class="card pad">
+        <h2 class="section-title">💬 the tea</h2>
+        <div id="feed" class="feed"></div>
+      </section>
+    </div>
+  </div>
+
+  <button id="fab" class="fab">＋<span>give points</span></button>
+</main>
+
+<!-- ── give-points modal ────────────────────────────────────── -->
+<div id="modal" class="modal-wrap" hidden>
+  <div class="modal-bg" data-close></div>
+  <div class="modal card" role="dialog" aria-modal="true" aria-label="Give points">
+    <button class="x" data-close aria-label="close">×</button>
+    <h2 class="display">give points</h2>
+
+    <div class="field"><span>to who?</span><div id="target-pick" class="pick-row wrapy"></div></div>
+
+    <div class="field">
+      <span>how many?</span>
+      <div class="sign">
+        <button class="sign-btn is-on" data-sign="1" type="button">＋ good</button>
+        <button class="sign-btn" data-sign="-1" type="button">－ bad</button>
+      </div>
+      <div class="amounts">
+        <button class="amt is-on" data-amt="1" type="button">1</button>
+        <button class="amt" data-amt="3" type="button">3</button>
+        <button class="amt" data-amt="5" type="button">5</button>
+        <button class="amt" data-amt="10" type="button">10</button>
+        <button class="amt" data-amt="25" type="button">25</button>
+        <input id="in-amt" class="amt-input" type="number" min="1" max="1000" value="1" aria-label="custom amount">
+      </div>
+    </div>
+
+    <label class="field">
+      <span>why? <i class="muted tiny">(be honest)</i></span>
+      <textarea id="in-comment" maxlength="280" rows="3" placeholder="brought snacks unprompted 🧁"></textarea>
+    </label>
+
+    <button id="btn-give" class="btn btn-pink btn-block">send it 💖</button>
+  </div>
+</div>
+
+<div id="toasts" class="toasts"></div>
+<div id="confetti" class="confetti" aria-hidden="true"></div>
+
+<script type="module" src="./app.js"></script>
