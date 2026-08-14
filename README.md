@@ -45,6 +45,23 @@ Environment variables*. The build step ([`scripts/build-config.mjs`](scripts/bui
 generates `config.js` from them; if they're unset it leaves the committed file
 alone, so GitHub Pages and local dev keep working either way.
 
+## Deploying to Vercel (Hobby)
+
+Also wired up — [`vercel.json`](vercel.json) sets the build command, output dir,
+security headers, cache rules, and clean URLs. It's a pure static deploy: no
+serverless functions, no cron, no image optimisation, so it sits comfortably
+inside the free **Hobby** plan.
+
+- **Git**: [vercel.com/new](https://vercel.com/new) → import this repo →
+  **Deploy**. Framework preset *Other*; everything else comes from `vercel.json`.
+- **CLI**: `npx vercel --prod`
+
+Same env-var trick as Netlify: set `SUPABASE_URL` and `SUPABASE_ANON_KEY` under
+*Settings → Environment Variables* (tick all three environments) and the build
+generates `config.js` for you.
+
+> Hobby is for non-commercial use — fine for a scoreboard between friends.
+
 ### Running it locally
 
 Needs a real server (it uses ES modules), so not just double-clicking the file:

@@ -1,0 +1,5 @@
+.git
+node_modules
+supabase
+_headers
+netlify.toml

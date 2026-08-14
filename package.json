@@ -1,0 +1,13 @@
+{
+  "name": "scoreboard",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A cute pink scoreboard where friends give each other points",
+  "license": "MIT",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "build": "node scripts/build-config.mjs",
+    "dev": "npx --yes serve ."
+  }
+}
