@@ -1,7 +1,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>scoreboard ✨</title>
-<meta name="theme-color" content="#ffd9e8">
+<meta name="theme-color" content="#fff4f9">
+<meta name="description" content="A cute scoreboard where friends give each other points.">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,18 +31,21 @@
     <p class="muted">keeping score, lovingly</p>
 
     <div class="tabs" role="tablist">
-      <button class="tab is-on" data-tab="login" role="tab">log in</button>
-      <button class="tab" data-tab="join" role="tab">join</button>
+      <button class="tab is-on" data-tab="login" role="tab" type="button">log in</button>
+      <button class="tab" data-tab="join" role="tab" type="button">join</button>
     </div>
 
     <form id="form-auth" autocomplete="on">
       <label class="field">
         <span>your name</span>
-        <input id="in-name" name="username" type="text" maxlength="24" required placeholder="e.g. Maya" autocomplete="username">
+        <input id="in-name" name="username" type="text" maxlength="24" required
+               placeholder="e.g. Maya" autocomplete="username"
+               autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next">
       </label>
       <label class="field">
         <span>password</span>
-        <input id="in-pass" name="password" type="password" minlength="4" required placeholder="••••••" autocomplete="current-password">
+        <input id="in-pass" name="password" type="password" minlength="4" required
+               placeholder="••••••" autocomplete="current-password" enterkeyhint="go">
       </label>
 
       <div id="join-only" hidden>
@@ -62,36 +68,42 @@
 <main id="screen-app" class="screen" hidden>
   <header class="topbar">
     <div class="brand"><span class="logo">🏆</span><span class="display">scoreboard</span></div>
-    <div class="who">
-      <button id="chip-me" class="chip" title="change your emoji / colour"></button>
-      <button id="btn-out" class="btn btn-ghost tiny">log out</button>
-    </div>
+    <button id="chip-me" class="chip" title="edit your look"></button>
   </header>
 
   <div class="wrap">
     <section id="podium" class="podium"></section>
 
+    <!-- one pane at a time on phones, both side-by-side on desktop -->
+    <div class="switch" role="tablist">
+      <button class="sw is-on" data-pane="board" type="button" role="tab">🏅 standings</button>
+      <button class="sw" data-pane="feed" type="button" role="tab">💬 the tea</button>
+    </div>
+
     <div class="grid">
-      <section class="card pad">
+      <section class="pane card pad" data-pane="board">
         <h2 class="section-title">🏅 standings</h2>
         <div id="board" class="board"></div>
       </section>
 
-      <section class="card pad">
+      <section class="pane card pad off" data-pane="feed">
         <h2 class="section-title">💬 the tea</h2>
         <div id="feed" class="feed"></div>
       </section>
     </div>
   </div>
 
-  <button id="fab" class="fab">＋<span>give points</span></button>
+  <div class="dock">
+    <button id="fab" class="fab" type="button"><span class="plus">＋</span>give points</button>
+  </div>
 </main>
 
-<!-- ── give-points modal ────────────────────────────────────── -->
-<div id="modal" class="modal-wrap" hidden>
-  <div class="modal-bg" data-close></div>
-  <div class="modal card" role="dialog" aria-modal="true" aria-label="Give points">
-    <button class="x" data-close aria-label="close">×</button>
+<!-- ── give-points sheet ────────────────────────────────────── -->
+<div id="modal" class="sheet-wrap" hidden>
+  <div class="sheet-bg" data-close></div>
+  <div class="sheet card" role="dialog" aria-modal="true" aria-label="Give points">
+    <div class="grabber" data-close></div>
+    <button class="x" data-close aria-label="close" type="button">×</button>
     <h2 class="display">give points</h2>
 
     <div class="field"><span>to who?</span><div id="target-pick" class="pick-row wrapy"></div></div>
@@ -108,16 +120,42 @@
         <button class="amt" data-amt="5" type="button">5</button>
         <button class="amt" data-amt="10" type="button">10</button>
         <button class="amt" data-amt="25" type="button">25</button>
-        <input id="in-amt" class="amt-input" type="number" min="1" max="1000" value="1" aria-label="custom amount">
+        <input id="in-amt" class="amt-input" type="number" inputmode="numeric"
+               min="1" max="1000" value="1" aria-label="custom amount">
       </div>
     </div>
 
     <label class="field">
       <span>why? <i class="muted tiny">(be honest)</i></span>
-      <textarea id="in-comment" maxlength="280" rows="3" placeholder="brought snacks unprompted 🧁"></textarea>
+      <textarea id="in-comment" maxlength="280" rows="3" enterkeyhint="done"
+                placeholder="brought snacks unprompted 🧁"></textarea>
     </label>
 
-    <button id="btn-give" class="btn btn-pink btn-block">send it 💖</button>
+    <button id="btn-give" class="btn btn-pink btn-block" type="button">send it 💖</button>
+  </div>
+</div>
+
+<!-- ── profile sheet ────────────────────────────────────────── -->
+<div id="profile" class="sheet-wrap" hidden>
+  <div class="sheet-bg" data-close-profile></div>
+  <div class="sheet card" role="dialog" aria-modal="true" aria-label="Your look">
+    <div class="grabber" data-close-profile></div>
+    <button class="x" data-close-profile aria-label="close" type="button">×</button>
+    <h2 class="display">your look</h2>
+
+    <div class="preview"><div id="pf-preview"></div></div>
+
+    <div class="field">
+      <span>emoji</span>
+      <div id="pf-emoji" class="pick-grid"></div>
+    </div>
+    <div class="field">
+      <span>colour</span>
+      <div id="pf-color" class="pick-row"></div>
+    </div>
+
+    <button id="btn-save-profile" class="btn btn-pink btn-block" type="button">save 💅</button>
+    <button id="btn-out" class="btn btn-ghost btn-block" type="button">log out</button>
   </div>
 </div>
 

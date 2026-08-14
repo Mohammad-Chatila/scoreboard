@@ -1,0 +1,47 @@
+[build]
+  publish = "."
+  command = "node scripts/build-config.mjs"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Optional: set SUPABASE_URL and SUPABASE_ANON_KEY in
+# Site configuration → Environment variables, and the build step
+# will generate config.js for you. If they're unset, the committed
+# config.js is used as-is.
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "DENY"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://esm.sh; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://esm.sh; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+
+# no build hashing, so never let the browser hold a stale copy
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# keep the schema + readme out of the deploy
+[[redirects]]
+  from = "/supabase/*"
+  to = "/index.html"
+  status = 404
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

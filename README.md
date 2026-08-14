@@ -29,6 +29,22 @@ GitHub Pages serves it at `https://<you>.github.io/scoreboard/`.
 Send that link to your friends — they hit **join**, pick an emoji and a colour,
 and they're on the board.
 
+## Deploying to Netlify
+
+Already wired up — [`netlify.toml`](netlify.toml) sets the publish dir, security
+headers, cache rules, and an SPA redirect. Either:
+
+- **Git**: Netlify → *Add new site* → *Import an existing project* → pick this
+  repo. No settings to change; it deploys on every push to `main`.
+- **Drag & drop**: drop the folder on [app.netlify.com/drop](https://app.netlify.com/drop).
+- **CLI**: `npx netlify-cli deploy --prod`
+
+If you'd rather **not commit your keys**, leave `config.js` on its placeholders
+and set `SUPABASE_URL` + `SUPABASE_ANON_KEY` under *Site configuration →
+Environment variables*. The build step ([`scripts/build-config.mjs`](scripts/build-config.mjs))
+generates `config.js` from them; if they're unset it leaves the committed file
+alone, so GitHub Pages and local dev keep working either way.
+
 ### Running it locally
 
 Needs a real server (it uses ES modules), so not just double-clicking the file:
@@ -36,6 +52,17 @@ Needs a real server (it uses ES modules), so not just double-clicking the file:
 ```bash
 npx serve .          # → http://localhost:3000
 ```
+
+## Mobile first
+
+The layout is built for a phone and only ever *adds* room on bigger screens.
+Standings and the comment feed are a single swappable pane on phones and go
+side-by-side at 900px. The feed has no inner scroll container on touch (nested
+scrolling is miserable), the give-points and profile editors are real bottom
+sheets, every tap target clears 44px, inputs are 16px so iOS doesn't zoom on
+focus, safe-area insets are respected on notched phones, there's haptic feedback
+where the browser allows it, and the board resyncs on `visibilitychange` because
+phones suspend the realtime socket in the background.
 
 ## How the login works
 
